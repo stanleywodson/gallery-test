@@ -1,0 +1,29 @@
+body 
+{ 
+    min-height: 100vh;
+    background-color: #f5f5ef;
+}
+.figure{
+    padding: 30px;
+}
+.img-folder{
+    height: 80px;
+    width: 80px;
+}
+.img-folder:hover{
+    height: 100px;
+    width: 100px;
+    -webkit-transition: 0.6s ease-in;
+    -moz-transition: 0.6s ease-in; 
+    -o-transition: 0.6s ease-in;
+    transition: 0.6s ease-in
+}
+
+.img-folder:not(:hover) { 
+    height: 80px;
+    width: 80px;
+    -webkit-transition: 0.4s ease-in;
+    -moz-transition: 0.4s ease-in; 
+    -o-transition: 0.4s ease-in;
+    transition: 0.4s ease-in
+} 

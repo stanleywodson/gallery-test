@@ -20,6 +20,10 @@ class GalleryController extends Controller
         $gallery = Gallery::all();
 
         $teste = DB::table('galleries')->select('filename')->get();
+        $collections = collect($gallery);
+        foreach($collections as $collect){
+            print_r($collect->filename).'/n';
+        }
         /*
         foreach($teste as $t){
             $d = explode('/', $t->filename);
@@ -32,10 +36,10 @@ class GalleryController extends Controller
     }
 
     public function index()
-    {   
+    {
         $folders = Storage::disk('public')->directories();
 
-        return view('admin.form_gallery',[
+        return view('admin.form_gallery', [
             'folders' => $folders
         ]);
     }
@@ -91,28 +95,33 @@ class GalleryController extends Controller
         if ($request->hasfile('files')) {
 
             foreach ($request->file('files') as $file) {
-        
+
                 if ($file->isValid()) {
 
                     $options = $request->only('options');
-                    var_dump($options); die();
                     $path = Storage::disk('public')->put($options['options'], $file);
 
-                    Gallery::create([
+                    if ($path) {
 
-                        'filename' => $path,
-                        'folders' =>$options['options']
-                    ]);
-                    
+                        Gallery::create([
+
+                            'filename' => $path,
+                            'folders' => $options['options']
+                        ]);
+
+                        return redirect()->route('gallery.uploadimages');
+                    }
                 }
             }
+        } else {
+            return redirect()->route('gallery.uploadimages');
         }
     }
 
     public function destroy($id) //função funcionando mas precisando de ajustes
     {
         $gallery = Gallery::find($id);
-        
+
         $delete_image = Storage::disk('public')->delete($gallery->filename);
 
         if ($delete_image) {
@@ -131,11 +140,11 @@ class GalleryController extends Controller
             'create_dir' => ['string', 'min:4']
         ]);
 
-         $directory = $request->only('create_dir');
-         
-         Storage::disk('public')->makeDirectory($directory['create_dir']);
+        $directory = $request->only('create_dir');
 
-         return redirect()->route('gallery.uploadimages');
+        Storage::disk('public')->makeDirectory($directory['create_dir']);
+
+        return redirect()->route('gallery.uploadimages');
         // criarei um input para ser criado uma nova pasta
         //resposta de criação feita com sucesso!
         //fazer validações
@@ -144,16 +153,16 @@ class GalleryController extends Controller
     }
 
     public function destroyFolder($directory)
-    {   
-            
-            //$deletedir = Storage::disk('public')->deleteDirectory($directory);
-            
-            
-                $folder = Gallery::where('id', 1);
-                dd($folder);
-            
-            echo 'pasta excluida com sucesso!';
-            return redirect()->route('gallery.uploadimages');
+    {
+
+        //$deletedir = Storage::disk('public')->deleteDirectory($directory);
+
+
+        $folder = Gallery::where('id', 1);
+        dd($folder);
+
+        echo 'pasta excluida com sucesso!';
+        return redirect()->route('gallery.uploadimages');
         //exclusão do diretório com seus arquivos
         //excluir do banco de dados os arquivos
     }
