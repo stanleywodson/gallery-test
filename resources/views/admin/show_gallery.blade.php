@@ -27,18 +27,25 @@
 </head>
 
 <body>
+
+    <br>
+    <!--TESTE---->
+        @foreach($array as $foto)
+            @if($foto->folders == 'Batismo')
+                {{$foto->filename}}
+            @elseif($foto->folders == 'dfsdfsdfsdf')
+                {{$foto->filename}}
+            @endif
+        @endforeach
+    <!--####################-->
+        
     <h1>Página Teste</h1>
     <hr>
     <?php
     foreach ($galleries as $t) {
         $d = explode('/', $t->filename);
     ?>
-        <div class="gallery">
-            <a target="_blank" href="img_5terre.jpg">
-                <img src="{{asset('storage/'.$d[0].'/'.$d[1])}}" alt="Cinque Terre" width="600" height="400">
-            </a>
-            <div class="desc">{{$d[0]}}</div>
-        </div>
+
     <?php
     }
     ?>

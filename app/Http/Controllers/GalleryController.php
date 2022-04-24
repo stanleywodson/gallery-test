@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Gallery;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 //use App\Http\Requests\GalleryRequest;
 
 class GalleryController extends Controller
 {
+    //trás informoçoes de todas as imagens e seus diretórios/
     public function showGallery()
     {
         //aqui tenho que trazer do 'db' todas as fotos e mostrar elas na view abaixo
@@ -18,23 +20,21 @@ class GalleryController extends Controller
         //fazer modal ao clicar em uma unica ** ENVIAR ESSA FUNÇAO PARA SITE!!!
 
         $gallery = Gallery::all();
-
+            
         $teste = DB::table('galleries')->select('filename')->get();
-        $collections = collect($gallery);
-        foreach($collections as $collect){
-            print_r($collect->filename).'/n';
-        }
+
         /*
         foreach($teste as $t){
-            $d = explode('/', $t->filename);
-            
+            $d = explode('/', $t->filename);           
         }
         */
         return view('admin.show_gallery', [
-            'galleries' => $teste
+            'galleries' => $teste,
+            'array' => $gallery
         ]);
     }
 
+    // controla o form_gallery enviando dados
     public function index()
     {
         $folders = Storage::disk('public')->directories();
@@ -86,6 +86,7 @@ class GalleryController extends Controller
     }
     */
 
+    // Adiciona imagens e a pasta onde foi gravada, no banco de dados
     public function uploadImages(Request $request)
     {
         $request->validate([
@@ -101,23 +102,19 @@ class GalleryController extends Controller
                     $options = $request->only('options');
                     $path = Storage::disk('public')->put($options['options'], $file);
 
-                    if ($path) {
+                    Gallery::create([
 
-                        Gallery::create([
-
-                            'filename' => $path,
-                            'folders' => $options['options']
-                        ]);
-
-                        return redirect()->route('gallery.uploadimages');
-                    }
+                        'filename' => $path,
+                        'folders' => $options['options']
+                    ]);
                 }
             }
         } else {
-            return redirect()->route('gallery.uploadimages');
+            return redirect()->route('gallery.uploadimages');//mudar para um alert
         }
     }
 
+    // exclui uma única imagem
     public function destroy($id) //função funcionando mas precisando de ajustes
     {
         $gallery = Gallery::find($id);
@@ -130,10 +127,10 @@ class GalleryController extends Controller
         } else {
             echo 'arquivo não existe!';
         }
-
         //fazer o delete de mais e uma imagem ao mesmo tempo
     }
 
+    //Cria um diretório na pasta publíca do sistema
     public function makeDirectorie(Request $request)
     {
         $request->validate([
@@ -141,29 +138,23 @@ class GalleryController extends Controller
         ]);
 
         $directory = $request->only('create_dir');
-
+    
         Storage::disk('public')->makeDirectory($directory['create_dir']);
 
-        return redirect()->route('gallery.uploadimages');
-        // criarei um input para ser criado uma nova pasta
-        //resposta de criação feita com sucesso!
-        //fazer validações
-
+        return redirect()->route('gallery.uploadimages');//resposta de criação feita com sucesso!
 
     }
 
+    // Exclui um diretório com seus arquivos no banco de dados
     public function destroyFolder($directory)
     {
+           $deletedir = Storage::disk('public')->deleteDirectory($directory);
 
-        //$deletedir = Storage::disk('public')->deleteDirectory($directory);
+           if($deletedir){
 
+                DB::table('galleries')->where('folders', $directory)->delete();
 
-        $folder = Gallery::where('id', 1);
-        dd($folder);
-
-        echo 'pasta excluida com sucesso!';
-        return redirect()->route('gallery.uploadimages');
-        //exclusão do diretório com seus arquivos
-        //excluir do banco de dados os arquivos
+                return redirect()->route('gallery.uploadimages');// enviar msg de exclusão
+           }  
     }
 }

@@ -19,9 +19,8 @@
         <h1>Galeria fotos Igreja</h1>
         <br>
         <h5>guardar imagem no db</h5>
-        <form action="{{route('gallery.uploadimages')}}" method="post" enctype="multipart/form-data">
+        <form method="post" action="{{route('gallery.uploadimages')}}"  enctype="multipart/form-data">
             @csrf
-
             <select class="form-select" aria-label="Default select example" name="options" id="">
                 <option value="" selected>Escolha ou/ Crie um Diretório</option>
 
@@ -32,6 +31,7 @@
             </select>
 
             <br>
+
             <div class="mb-3">
                 <label for="formFile" class="form-label">Adicionar Fotos</label>
                 <input class="form-control" type="file" id="formFile" name="files[]" multiple>
@@ -39,7 +39,9 @@
 
             <button type="submit" class="btn btn-secondary">Criar</button>
         </form>
+
         <hr>
+
         <h5>Criar Diretório</h5>
         <form method="post" action="{{route('gallery.makedir')}}">
             @csrf
