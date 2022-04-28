@@ -19,7 +19,7 @@
         <h1>Galeria fotos Igreja</h1>
         <br>
         <h5>guardar imagem no db</h5>
-        <form method="post" action="{{route('gallery.uploadimages')}}"  enctype="multipart/form-data">
+        <form method="post" action="{{route('gallery.uploadimages')}}" enctype="multipart/form-data">
             @csrf
             <select class="form-select" aria-label="Default select example" name="options" id="">
                 <option value="" selected>Escolha ou/ Crie um Diretório</option>
@@ -55,21 +55,41 @@
         <hr>
 
         <h5>Excluir Diretório</h5>
-    
+
+
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th scope="col">diretórios</th>
+                    <th scope="col">ação</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach($folders as $folder)
+                <tr>
+                    <td>{{$folder}}</td>
+                    <td><a class="btn btn-danger" href="javascript:if(confirm('Tem certeza que deseja excluir esse diretório?')){location='{{url('/gallery/'.$folder.'/deldir')}}'}">delete</td>
+                </tr>
+                @endforeach
+            </tbody>
+
+        </table>
+
+        <hr>
+        <h5>Selecionar diretório</h5>
         @foreach($folders as $folder)
-        
-        <a class="folderlink" href="javascript:if(confirm('Tem certeza que deseja excluir esse diretório?')){location='{{url('/gallery/'.$folder.'/deldir')}}'}">
-            <figure class="figure">
-                <img src="{{asset('assets/images/foldericon.png')}}" class="img-folder" alt="">
-                <figcaption class="figure-caption">{{$folder}}</figcaption>
-            </figure>
-        </a>
+        <figure class="figure">
+            <img src="{{asset('assets/images/foldericon.png')}}" class="img-folder" alt="">
+            <figcaption class="figure-caption">{{$folder}}</figcaption>
+        </figure>
         @endforeach
 
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     </div>
-    <a href="">testando</a>
+
 </body>
 
 </html>
