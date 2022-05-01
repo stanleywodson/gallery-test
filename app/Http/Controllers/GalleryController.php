@@ -16,13 +16,10 @@ class GalleryController extends Controller
     public function showGallery($dir)
     {
         
-        //aqui tenho que trazer do 'db' todas as fotos e mostrar elas na view abaixo
-        //dividindo por temas(encontro batismo celulas e outros)
         //fazer modal ao clicar em uma unica ** ENVIAR ESSA FUNÇAO PARA SITE!!!
         $folders = DB::table('galleries')->where('folders', $dir)->get();
     
-
-        return view('admin.show_gallery', [
+        return view('admin.dashboard.show_gallery', [
             'collections' => $folders
         ]);
     }
@@ -32,7 +29,7 @@ class GalleryController extends Controller
     {
         $folders = Storage::disk('public')->directories();
 
-        return view('admin.form_gallery', [
+        return view('admin.dashboard.form_gallery', [
             'folders' => $folders
         ]);
     }
