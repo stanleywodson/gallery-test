@@ -6,6 +6,11 @@ body
 .figure{
     padding: 30px;
 }
+.img-folder2{
+    height: 150px;
+    width: 150px;
+    border: solid 3px;
+}
 .img-folder{
     height: 80px;
     width: 80px;

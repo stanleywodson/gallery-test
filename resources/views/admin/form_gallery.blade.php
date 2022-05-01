@@ -70,7 +70,7 @@
                 @foreach($folders as $folder)
                 <tr>
                     <td>{{$folder}}</td>
-                    <td><a class="btn btn-danger" href="javascript:if(confirm('Tem certeza que deseja excluir esse diretório?')){location='{{url('/gallery/'.$folder.'/deldir')}}'}">delete</td>
+                    <td><a class="btn btn-danger" href="javascript:if(confirm('Tem certeza que deseja excluir esse diretório?')){location='{{url('/galeria/'.$folder.'/deldir')}}'}">delete</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -78,12 +78,17 @@
         </table>
 
         <hr>
+
         <h5>Selecionar diretório</h5>
+
         @foreach($folders as $folder)
-        <figure class="figure">
-            <img src="{{asset('assets/images/foldericon.png')}}" class="img-folder" alt="">
-            <figcaption class="figure-caption">{{$folder}}</figcaption>
-        </figure>
+           <a href="{{url('/show/'.$folder)}}">
+            <figure class="figure">
+                <img src="{{asset('assets/images/foldericon.png')}}" class="img-folder" alt="">
+                <figcaption class="figure-caption">{{$folder}}</figcaption>
+            </figure>
+            </a> 
+
         @endforeach
 
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>

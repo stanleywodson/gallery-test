@@ -13,24 +13,17 @@ use Illuminate\Support\Collection;
 class GalleryController extends Controller
 {
     //trás informoçoes de todas as imagens e seus diretórios/
-    public function showGallery()
+    public function showGallery($dir)
     {
+        
         //aqui tenho que trazer do 'db' todas as fotos e mostrar elas na view abaixo
         //dividindo por temas(encontro batismo celulas e outros)
         //fazer modal ao clicar em uma unica ** ENVIAR ESSA FUNÇAO PARA SITE!!!
+        $folders = DB::table('galleries')->where('folders', $dir)->get();
+    
 
-        $gallery = Gallery::all();
-            
-        $teste = DB::table('galleries')->select('filename')->get();
-
-        /*
-        foreach($teste as $t){
-            $d = explode('/', $t->filename);           
-        }
-        */
         return view('admin.show_gallery', [
-            'galleries' => $teste,
-            'array' => $gallery
+            'collections' => $folders
         ]);
     }
 
