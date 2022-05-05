@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gallery;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Gallery;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
+
 
 //use App\Http\Requests\GalleryRequest;
 
@@ -15,10 +16,8 @@ class GalleryController extends Controller
     //trás informoçoes de todas as imagens e seus diretórios/
     public function showGallery($dir)
     {
-        
-        //fazer modal ao clicar em uma unica ** ENVIAR ESSA FUNÇAO PARA SITE!!!
+        //fazer modal ao clicar em uma unica imagem** !!!
         $folders = DB::table('galleries')->where('folders', $dir)->get();
-    
         return view('admin.dashboard.show_gallery', [
             'collections' => $folders
         ]);
@@ -34,48 +33,6 @@ class GalleryController extends Controller
         ]);
     }
 
-
-    /*VERSÃO ANTERIOR SERÁ DESCONTINUADA
-    public function store(Request $request)
-    {
-        $request->validate([
-            'files*' => ['required','image','mimes:jpeg,png,jpg'],
-        ]);
-                
-                foreach( $request->file('files') as $file){
-
-                    $extension = $file->extension();
-                    $filename = time().rand(0,99).'.'.$extension;
-                    
-                    $teste = $request->all();
-                    //fechar deipois do teste////////////////////////
-                    if($teste['options'] == 1){
-                        $filename->move(public_path('stanleywdson'));
-                        echo 'salvo na pasta encontro';
-                    }elseif($teste['options'] == 2){
-                        $filename->store('batismo');
-                        echo 'salvo na pasta batismo';
-                    }elseif($teste['options'] == 3){
-                        $filename->store('celulas');
-                        echo 'salvo na pasta celulas';
-                    }elseif($teste['options'] == 4){
-                        $filename->store('outros');
-                        echo 'salvo na pasta outros';
-                    }
-                    /////////////////////////////////////////////
-                    
-                    $gallery = new Gallery;
-                    $gallery->filename = $filename;
-                    $gallery->save();
-                    
-                }
-                
-
-                
-           
-    }
-    */
-
     // Adiciona imagens e a pasta onde foi gravada, no banco de dados
     public function uploadImages(Request $request)
     {
@@ -88,35 +45,47 @@ class GalleryController extends Controller
             foreach ($request->file('files') as $file) {
 
                 if ($file->isValid()) {
-
+                    
                     $options = $request->only('options');
-                    $path = Storage::disk('public')->put($options['options'], $file);
+                    
+                    if (!$options['options'] == null) {
+                        
+                        $path = Storage::disk('public')->put($options['options'], $file);
+                        $path2 = explode('/', $path);
+                        
 
-                    Gallery::create([
+                        Gallery::create([
+                            'filename' => $path2[1],
+                            'folders' => $options['options']
+                        ]);
 
-                        'filename' => $path,
-                        'folders' => $options['options']
-                    ]);
+                        //return redirect()->route('gallery.uploadimages')->with('msg', 'Imagem salva com sucesso!');
+                    }else{
+
+                        //return redirect()->route('gallery.uploadimages')->with('msgerror', 'Selecione um diretório!');
+                    }
+                    
                 }
+
             }
-        } else {
-            return redirect()->route('gallery.uploadimages');//mudar para um alert
         }
     }
 
-    // exclui uma única imagem
-    public function destroy($id) //função funcionando mas precisando de ajustes
+    // exclui uma única imagem --FASE DE APRIMORAMENTO
+    public function destroy($nameimg)
     {
-        $gallery = Gallery::find($id);
-
-        $delete_image = Storage::disk('public')->delete($gallery->filename);
-
-        if ($delete_image) {
-            $gallery->delete();
-            echo 'imagem deletada com sucesso!';
-        } else {
-            echo 'arquivo não existe!';
-        }
+        $gallery = DB::table('galleries')->where('filename', $nameimg)->get();
+        foreach($gallery as $foto){
+                
+            $delete_image = Storage::disk('public')->delete($foto->folders.'/'.$foto->filename);
+            if($delete_image){
+                DB::table('galleries')->where('filename', $foto->filename)->delete();
+                echo 'imagem deletada com sucesso!';
+            }else{
+                echo 'ainda nao foi dessa vez!';
+            }
+                
+        }       
         //fazer o delete de mais e uma imagem ao mesmo tempo
     }
 
@@ -128,23 +97,23 @@ class GalleryController extends Controller
         ]);
 
         $directory = $request->only('create_dir');
-    
+
         Storage::disk('public')->makeDirectory($directory['create_dir']);
 
-        return redirect()->route('gallery.uploadimages');//resposta de criação feita com sucesso!
+        return redirect()->route('gallery.uploadimages'); //resposta de criação feita com sucesso!
 
     }
 
     // Exclui um diretório com seus arquivos no banco de dados
     public function destroyFolder($directory)
     {
-           $deletedir = Storage::disk('public')->deleteDirectory($directory);
+        $deletedir = Storage::disk('public')->deleteDirectory($directory);
 
-           if($deletedir){
+        if ($deletedir) {
 
-                DB::table('galleries')->where('folders', $directory)->delete();
+            DB::table('galleries')->where('folders', $directory)->delete();
 
-                return redirect()->route('gallery.uploadimages');// enviar msg de exclusão
-           }  
+            return redirect()->route('gallery.uploadimages'); // enviar msg de exclusão
+        }
     }
 }

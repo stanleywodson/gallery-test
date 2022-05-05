@@ -17,18 +17,23 @@
 
 
         <h1>Galeria fotos Igreja</h1>
-        <br>
-        <h5>guardar imagem no db</h5>
+
+         
+        
+        <!-- <fieldset> -->
+        <!-- <legend>guardar imagem no banco de dados</legend> -->
         <form method="post" action="{{route('gallery.uploadimages')}}" enctype="multipart/form-data">
             @csrf
+            <!-- <label for=""> -->
             <select class="form-select" aria-label="Default select example" name="options" id="">
-                <option value="" selected>Escolha ou/ Crie um Diretório</option>
+                <option value="0" selected>Escolha ou/ Crie um Diretório</option>
 
                 @foreach($folders as $folder)
                 <option value="{{$folder}}">{{$folder}}</option>
                 @endforeach
 
             </select>
+            <!-- </label> -->
 
             <br>
 
@@ -39,7 +44,8 @@
 
             <button type="submit" class="btn btn-secondary">Criar</button>
         </form>
-
+        
+        <!-- </fieldset> -->
         <hr>
 
         <h5>Criar Diretório</h5>
@@ -90,7 +96,7 @@
             </a> 
 
         @endforeach
-
+        
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     </div>

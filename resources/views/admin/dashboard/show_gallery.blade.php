@@ -14,8 +14,9 @@
 
         @foreach($collections as $folder)
             <figure class="figure">
-                <img src="{{asset('storage/'.$folder->filename)}}" class="img-folder2" alt="">
+                <img src="{{asset('storage/'.$folder->folders.'/'.$folder->filename)}}" class="img-folder2" alt="">
                 <figcaption class="figure-caption"></figcaption>
+                <a href="{{url('galeria/'.$folder->filename.'/destroy')}}">excluir</a>
             </figure>
         @endforeach
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>

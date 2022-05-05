@@ -34,3 +34,7 @@ body
     transition: 0.4s ease-in
 }
 */ 
+/* fieldset, label{ 
+    display: block;
+    padding: 5px;
+} */

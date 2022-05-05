@@ -20,9 +20,14 @@ Route::prefix('galeria')->group(function () {
     Route::post('/', [GalleryController::class, 'uploadimages'])->name('gallery.uploadimages');
     
     Route::get('{directory}/deldir', [GalleryController::class, 'destroyFolder'])->name('gallery.deldir'); 
-    Route::get('{id}/destroy', [GalleryController::class, 'destroy'])->name('gallery.destroy');
+    Route::get('{nameimg}/destroy', [GalleryController::class, 'destroy'])->name('gallery.destroy');
     Route::post('makedir', [GalleryController::class, 'makeDirectorie'])->name('gallery.makedir');
 });
 
 Route::get('/show/{directory}', [GalleryController::class, 'showGallery']); //rota teste tenho que voltar ela pra gallery
+
+
+Route::get('/test', function(){
+    return view('test');
+});
 
