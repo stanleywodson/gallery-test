@@ -11,7 +11,7 @@
 </head>
 
 <body>
-
+        <a href="{{route('gallery.uploadimages')}}">voltar</a>
         @foreach($collections as $folder)
             <figure class="figure">
                 <img src="{{asset('storage/'.$folder->folders.'/'.$folder->filename)}}" class="img-folder2" alt="">

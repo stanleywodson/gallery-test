@@ -18,6 +18,8 @@ class GalleryController extends Controller
     {
         //fazer modal ao clicar em uma unica imagem** !!!
         $folders = DB::table('galleries')->where('folders', $dir)->get();
+        $count = $folders->count();
+
         return view('admin.dashboard.show_gallery', [
             'collections' => $folders
         ]);
@@ -44,30 +46,24 @@ class GalleryController extends Controller
 
             foreach ($request->file('files') as $file) {
 
-                if ($file->isValid()) {
-                    
-                    $options = $request->only('options');
-                    
-                    if (!$options['options'] == null) {
-                        
-                        $path = Storage::disk('public')->put($options['options'], $file);
-                        $path2 = explode('/', $path);
-                        
+                $options = $request->only('options');
 
-                        Gallery::create([
-                            'filename' => $path2[1],
-                            'folders' => $options['options']
-                        ]);
+                //MODIFICAÇOES EM VALIDAÇÃO E REDIRECIONAMENTO E MSG 
+                $path = Storage::disk('public')->put($options['options'], $file);
+                $path2 = explode('/', $path);
 
-                        //return redirect()->route('gallery.uploadimages')->with('msg', 'Imagem salva com sucesso!');
-                    }else{
-
-                        //return redirect()->route('gallery.uploadimages')->with('msgerror', 'Selecione um diretório!');
-                    }
-                    
-                }
+                $gallery = Gallery::create([
+                    'filename' => $path2[1],
+                    'folders' => $options['options']
+                ]);
 
             }
+            if($gallery){
+                return redirect()->route('gallery.uploadimages')->with('msggr', 'Imagem salva com sucesso!');
+            }else{
+                echo 'imagem nao gravada';
+            }
+            
         }
     }
 
@@ -75,18 +71,19 @@ class GalleryController extends Controller
     public function destroy($nameimg)
     {
         $gallery = DB::table('galleries')->where('filename', $nameimg)->get();
-        foreach($gallery as $foto){
-                
-            $delete_image = Storage::disk('public')->delete($foto->folders.'/'.$foto->filename);
-            if($delete_image){
+
+        foreach ($gallery as $foto) {
+
+            $delete_image = Storage::disk('public')->delete($foto->folders . '/' . $foto->filename);
+
+            if ($delete_image) {
+
                 DB::table('galleries')->where('filename', $foto->filename)->delete();
-                echo 'imagem deletada com sucesso!';
-            }else{
-                echo 'ainda nao foi dessa vez!';
+                return redirect('show/' . $foto->folders);
+
             }
-                
-        }       
-        //fazer o delete de mais e uma imagem ao mesmo tempo
+        }
+        
     }
 
     //Cria um diretório na pasta publíca do sistema
@@ -100,7 +97,7 @@ class GalleryController extends Controller
 
         Storage::disk('public')->makeDirectory($directory['create_dir']);
 
-        return redirect()->route('gallery.uploadimages'); //resposta de criação feita com sucesso!
+        return redirect()->route('gallery.uploadimages')->with('msg', 'Diretório criado com sucesso!'); //resposta de criação feita com sucesso!
 
     }
 
@@ -113,7 +110,7 @@ class GalleryController extends Controller
 
             DB::table('galleries')->where('folders', $directory)->delete();
 
-            return redirect()->route('gallery.uploadimages'); // enviar msg de exclusão
+            return redirect()->route('gallery.uploadimages')->with('msgex', 'Diretório excluido com sucesso!');
         }
     }
 }

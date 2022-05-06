@@ -18,13 +18,13 @@
 
         <h1>Galeria fotos Igreja</h1>
 
-         
-        
-        <!-- <fieldset> -->
-        <!-- <legend>guardar imagem no banco de dados</legend> -->
+        @if(session('msggr'))
+            <div class="alert alert-success" role="alert">session('msggr')</div>
+        @endif
+
         <form method="post" action="{{route('gallery.uploadimages')}}" enctype="multipart/form-data">
             @csrf
-            <!-- <label for=""> -->
+            
             <select class="form-select" aria-label="Default select example" name="options" id="">
                 <option value="0" selected>Escolha ou/ Crie um Diretório</option>
 
@@ -33,7 +33,6 @@
                 @endforeach
 
             </select>
-            <!-- </label> -->
 
             <br>
 
@@ -45,10 +44,14 @@
             <button type="submit" class="btn btn-secondary">Criar</button>
         </form>
         
-        <!-- </fieldset> -->
         <hr>
 
         <h5>Criar Diretório</h5>
+
+        @if(session('msg'))
+            <div class="alert alert-primary" role="alert">{{session('msg')}}</div>
+        @endif
+
         <form method="post" action="{{route('gallery.makedir')}}">
             @csrf
             <div class="mb-3">
@@ -62,16 +65,17 @@
 
         <h5>Excluir Diretório</h5>
 
+        @if(session('msgex'))
+            <div class="alert alert-danger" role="alert">{{session('msgex')}}</div>
+        @endif
 
         <table class="table">
-
             <thead>
                 <tr>
                     <th scope="col">diretórios</th>
                     <th scope="col">ação</th>
                 </tr>
             </thead>
-
             <tbody>
                 @foreach($folders as $folder)
                 <tr>
@@ -80,7 +84,6 @@
                 </tr>
                 @endforeach
             </tbody>
-
         </table>
 
         <hr>
