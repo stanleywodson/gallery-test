@@ -14,14 +14,12 @@ use Illuminate\Support\Facades\Storage;
 class GalleryController extends Controller
 {
     //trás informoçoes de todas as imagens e seus diretórios/
-    public function showGallery($dir)
+    public function showGallery($directory)
     {
         //fazer modal ao clicar em uma unica imagem** !!!
-        $folders = DB::table('galleries')->where('folders', $dir)->get();
-        $count = $folders->count();
-
+        $folders = DB::table('galleries')->where('folders', $directory)->get();
         return view('admin.dashboard.show_gallery', [
-            'collections' => $folders
+            'images' => $folders
         ]);
     }
 

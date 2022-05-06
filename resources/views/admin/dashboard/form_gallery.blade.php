@@ -19,7 +19,7 @@
         <h1>Galeria fotos Igreja</h1>
 
         @if(session('msggr'))
-            <div class="alert alert-success" role="alert">session('msggr')</div>
+            <div class="alert alert-success" role="alert">{{session('msggr')}}</div>
         @endif
 
         <form method="post" action="{{route('gallery.uploadimages')}}" enctype="multipart/form-data">
@@ -80,7 +80,7 @@
                 @foreach($folders as $folder)
                 <tr>
                     <td>{{$folder}}</td>
-                    <td><a class="btn btn-danger" href="javascript:if(confirm('Tem certeza que deseja excluir esse diretório?')){location='{{url('/galeria/'.$folder.'/deldir')}}'}">delete</td>
+                    <td><a class="btn btn-danger" href="javascript:if(confirm('Tem certeza que deseja excluir esse diretório?')){location='{{route('gallery.deldir', ['directory'=>$folder])}}'}">delete</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -91,7 +91,8 @@
         <h5>Selecionar diretório</h5>
 
         @foreach($folders as $folder)
-           <a href="{{url('/show/'.$folder)}}">
+           
+           <a href="{{route('gallery.show',['directory'=>$folder])}}">
             <figure class="figure">
                 <img src="{{asset('assets/images/foldericon.png')}}" class="img-folder" alt="">
                 <figcaption class="figure-caption">{{$folder}}</figcaption>
