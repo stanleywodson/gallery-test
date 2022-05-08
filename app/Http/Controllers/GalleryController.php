@@ -40,11 +40,11 @@ class GalleryController extends Controller
             'files*' => ['required', 'image', 'mimes:jpeg,png,jpg']
         ]);
 
-        if ($request->hasfile('files')) {
+        $options = $request->only('options');
 
+        if ($request->hasfile('files') && !$options['options'] == 0){
+            
             foreach ($request->file('files') as $file) {
-
-                $options = $request->only('options');
 
                 //MODIFICAÇOES EM VALIDAÇÃO E REDIRECIONAMENTO E MSG 
                 $path = Storage::disk('public')->put($options['options'], $file);
@@ -58,11 +58,11 @@ class GalleryController extends Controller
             }
             if($gallery){
                 return redirect()->route('gallery.uploadimages')->with('msggr', 'Imagem salva com sucesso!');
-            }else{
-                echo 'imagem nao gravada';
             }
             
         }
+            return redirect()->route('gallery.uploadimages')->with('msgp', 'Selecione o diretório e/ou images');
+
     }
 
     // exclui uma única imagem --FASE DE APRIMORAMENTO

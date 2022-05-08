@@ -20,10 +20,12 @@
 
         @if(session('msggr'))
             <div class="alert alert-success" role="alert">{{session('msggr')}}</div>
+        @elseif(session('msgp')) 
+            <div class="alert alert-warning" role="alert">{{session('msgp')}}</div>   
         @endif
 
         <form method="post" action="{{route('gallery.uploadimages')}}" enctype="multipart/form-data">
-            @csrf
+        @csrf
             
             <select class="form-select" aria-label="Default select example" name="options" id="">
                 <option value="0" selected>Escolha ou/ Crie um Diretório</option>

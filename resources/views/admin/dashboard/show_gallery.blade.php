@@ -16,12 +16,13 @@
     
 
     @foreach($images as $image)
-    
-        <figure class="figure">
+
+            <img src="{{asset('storage/app/public/test/'.$image->filename)}}" alt="" width="100">
+        <!-- <figure class="figure">
             <img src="{{asset('storage/'.$image->folders.'/'.$image->filename)}}" class="img-folder2" alt="">
             <figcaption class="figure-caption"></figcaption>
             <a href="{{route('gallery.destroy',['nameimg'=>$image->filename])}}">excluir</a>
-        </figure>
+        </figure> -->
     
 
     @endforeach
