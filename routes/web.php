@@ -8,17 +8,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
 require __DIR__ . '/auth.php';
 
-Route::prefix('galeria')->group(function () {
+Route::prefix('galeria')->middleware(['auth'])->group(function () {
 
-    Route::get('/', [GalleryController::class, 'index'])->name('gallery.index');
-    Route::post('/', [GalleryController::class, 'uploadimages'])->name('gallery.uploadimages');
+    Route::get('/', function(){
+        return view('admin.dashboard.home');
+    });
+
+    Route::get('adicionarfoto', [GalleryController::class, 'showFormImages'])->name('gallery.showFormImages');
+    Route::post('adicionarfoto', [GalleryController::class, 'addimages'])->name('gallery.addimages');
+    Route::get('makedir', [GalleryController::class, 'showDir'])->name('gallery.showdir');
     Route::post('makedir', [GalleryController::class, 'makeDirectorie'])->name('gallery.makedir');
+    Route::get('folders', [GalleryController::class, 'delfoto'])->name('gallery.folders');
     Route::get('show/{directory}', [GalleryController::class, 'showGallery'])->name('gallery.show');
     Route::get('deldir/{directory}', [GalleryController::class, 'destroyFolder'])->name('gallery.deldir'); 
     Route::get('destroy/{nameimg}', [GalleryController::class, 'destroy'])->name('gallery.destroy');
@@ -27,8 +30,13 @@ Route::prefix('galeria')->group(function () {
 });
 
 
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
 
-Route::get('/test', function(){
-    return view('test');
-});
+
+
+// Route::get('/test', function(){
+//     return view('test');
+// });
 

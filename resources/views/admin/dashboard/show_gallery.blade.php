@@ -12,17 +12,18 @@
 
 <body>
   
-        <a href="{{route('gallery.uploadimages')}}">voltar</a>
-    
+        
+        @if(session('msgf'))
+            <div class="alert alert-primary" role="alert">{{session('msgf')}}</div>
+        @endif
 
     @foreach($images as $image)
 
-            <img src="{{asset('storage/app/public/test/'.$image->filename)}}" alt="" width="100">
-        <!-- <figure class="figure">
+        <figure class="figure">
             <img src="{{asset('storage/'.$image->folders.'/'.$image->filename)}}" class="img-folder2" alt="">
             <figcaption class="figure-caption"></figcaption>
             <a href="{{route('gallery.destroy',['nameimg'=>$image->filename])}}">excluir</a>
-        </figure> -->
+        </figure>
     
 
     @endforeach
